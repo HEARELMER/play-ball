@@ -36,3 +36,10 @@ Este documento registra las decisiones técnicas adoptadas para evolucionar **F�
 ## 7. Fase 1: migración tal cual en LegacyGame.ts
 - **Decisión:** la lógica original (IA, físicas 3D, reglas) vive temporalmente en src/game/LegacyGame.ts, consumiendo los módulos render/, audio/, input/ y ui/. La Fase 2 la separa en sim/ + render/ y este archivo se elimina.
 - **Motivo:** verificar paridad visual/jugabilidad antes de reescribir la simulación estilo Haxball.
+
+## 8. Repetición Instantánea y Sprites de Nombre
+- **Decisión:** El `WorldRenderer` conserva una ventana circular de ~3.5 segundos (`RenderState[]`) mientras `phase === 'playing'`. Al anotarse un gol (`phase === 'goal'`), reproduce automáticamente esa ventana con el distintivo `REPETICIÓN INSTANTÁNEA` y partículas 3D en la portería.
+- **Nombres sobre jugadores:** Cada futbolista 3D genera un `THREE.Sprite` con `CanvasTexture` renderizando dorsal y `username` validado por el host (resaltado en amarillo para el jugador local).
+
+## 9. Prevención de XSS y Autoridad del Host en el Lobby
+- **Decisión:** Toda entrada de usuario (`username`, mensajes de chat, códigos de sala) se sanea en `src/net/username.ts` y `src/net/protocol.ts`, y en el DOM se inserta exclusivamente con `textContent`.

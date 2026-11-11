@@ -281,10 +281,59 @@ export function buildStadium(scene: THREE.Scene): THREE.Group {
     });
   });
 
-  // 5. Construcción de las dos Porterías (Izquierda: Azul, Derecha: Roja)
-  buildGoal(stadiumGroup, -HALF_W, 1, 0x3b82f6);
-  buildGoal(stadiumGroup, HALF_W, -1, 0xf43f5e);
+  // 5. Construcción de las dos Porterías (Izquierda: Roja, Derecha: Azul)
+  buildGoal(stadiumGroup, -HALF_W, 1, 0xf43f5e);
+  buildGoal(stadiumGroup, HALF_W, -1, 0x3b82f6);
+
+  // 6. Gradas del estadio y público con InstancedMesh (alto rendimiento)
+  buildInstancedBleachers(stadiumGroup);
 
   scene.add(stadiumGroup);
   return stadiumGroup;
 }
+
+function buildInstancedBleachers(parent: THREE.Group): void {
+  const rows = 4;
+  const cols = 28;
+  const stepGeo = new THREE.BoxGeometry(PITCH_WIDTH + 6, 1.1, 1.8);
+  const stepMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.85 });
+  const stepsInst = new THREE.InstancedMesh(stepGeo, stepMat, rows * 2);
+  stepsInst.receiveShadow = true;
+
+  const fanGeo = new THREE.BoxGeometry(0.65, 0.95, 0.55);
+  const fanMat = new THREE.MeshStandardMaterial({ roughness: 0.6 });
+  const fansInst = new THREE.InstancedMesh(fanGeo, fanMat, rows * cols * 2);
+
+  const dummy = new THREE.Object3D();
+  const palette = [0xef4444, 0x3b82f6, 0xfacc15, 0x22c55e, 0xf8fafc, 0xa855f7];
+  const color = new THREE.Color();
+  let stepIdx = 0;
+  let fanIdx = 0;
+
+  for (const side of [-1, 1]) {
+    for (let r = 0; r < rows; r++) {
+      const z = side * (HALF_H + 3.2 + r * 1.85);
+      const y = 0.55 + r * 0.95;
+      dummy.position.set(0, y, z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.updateMatrix();
+      stepsInst.setMatrixAt(stepIdx++, dummy.matrix);
+
+      for (let c = 0; c < cols; c++) {
+        const x = -HALF_W + 2 + (c / (cols - 1)) * (PITCH_WIDTH - 4);
+        dummy.position.set(x, y + 0.85, z);
+        dummy.updateMatrix();
+        fansInst.setMatrixAt(fanIdx, dummy.matrix);
+        color.setHex(palette[(r * 7 + c * 3 + (side > 0 ? 1 : 0)) % palette.length]);
+        fansInst.setColorAt(fanIdx, color);
+        fanIdx++;
+      }
+    }
+  }
+  stepsInst.instanceMatrix.needsUpdate = true;
+  fansInst.instanceMatrix.needsUpdate = true;
+  if (fansInst.instanceColor) fansInst.instanceColor.needsUpdate = true;
+  parent.add(stepsInst);
+  parent.add(fansInst);
+}
+

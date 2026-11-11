@@ -20,3 +20,22 @@ export const BOUNCE_DAMPING = 0.68;
 
 export const PLAYER_RADIUS = 0.85;
 export const STEAL_COOLDOWN_TIME = 0.85; // Segundos de inmunidad/bloqueo tras robo
+
+
+// --- Simulación 2D estilo Haxball (Fase 3) ---
+export const SIM_DT = 1 / 60;
+export const RUN_SPEED = 11;
+export const SPRINT_SPEED = 15.5;
+export const ACCEL = 10;
+export const ENERGY_DRAIN = 30;
+export const ENERGY_REGEN = 15;
+export const PLAYER_MASS = 2;
+export const BALL_MASS = 1;
+export const BALL_DAMP = 0.45; // factor de velocidad restante por segundo
+export const BALL_MAX_SPEED = 60;
+export const POST_RADIUS = 0.22;
+export const KICK_REACH = 0.55;
+export const KICK_COOLDOWN = 0.2;
+export const CHARGE_TIME = 0.6;
+export const KICKOFF_TIME = 1.5;
+export const GOAL_PAUSE = 4.5;

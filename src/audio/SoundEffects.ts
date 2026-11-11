@@ -6,6 +6,23 @@
 export class SoundEffects {
   private ctx: AudioContext | null = null;
   public enabled: boolean = true;
+  private master: GainNode | null = null;
+  private vol = 1;
+
+  /** Volumen maestro 0..1 (ajustes de usuario). */
+  public setVolume(v: number): void {
+    this.vol = Math.min(1, Math.max(0, v));
+    if (this.master) this.master.gain.value = this.vol;
+  }
+
+  private out(): AudioNode {
+    if (!this.master && this.ctx) {
+      this.master = this.ctx.createGain();
+      this.master.gain.value = this.vol;
+      this.master.connect(this.ctx.destination);
+    }
+    return this.master as AudioNode;
+  }
 
   public init(): void {
     if (!this.ctx) {
@@ -33,7 +50,7 @@ export class SoundEffects {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(this.out());
     osc.start(now);
     osc.stop(now + 0.15);
   }
@@ -54,7 +71,7 @@ export class SoundEffects {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(this.out());
     osc.start(now);
     osc.stop(now + 0.1);
   }
@@ -75,7 +92,7 @@ export class SoundEffects {
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(this.out());
     osc.start(now);
     osc.stop(now + 0.26);
   }
@@ -99,7 +116,7 @@ export class SoundEffects {
     gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(this.out());
     osc.start(now);
     osc.stop(now + duration);
   }
@@ -122,7 +139,7 @@ export class SoundEffects {
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.out());
       osc.start(now);
       osc.stop(now + 0.36);
     });
