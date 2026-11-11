@@ -32,3 +32,7 @@ Este documento registra las decisiones técnicas adoptadas para evolucionar **F�
 ## 6. Tailwind CSS v4 Local + `@fontsource`
 - **Decisión:** Uso de `@tailwindcss/vite` y paquetes locales `@fontsource/chakra-petch` y `@fontsource/inter`.
 - **Motivo:** Cero dependencias de CDN externas; permite que el juego funcione 100% offline como PWA instalable.
+
+## 7. Fase 1: migración tal cual en LegacyGame.ts
+- **Decisión:** la lógica original (IA, físicas 3D, reglas) vive temporalmente en src/game/LegacyGame.ts, consumiendo los módulos render/, audio/, input/ y ui/. La Fase 2 la separa en sim/ + render/ y este archivo se elimina.
+- **Motivo:** verificar paridad visual/jugabilidad antes de reescribir la simulación estilo Haxball.
