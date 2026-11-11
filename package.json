@@ -1,0 +1,29 @@
+{
+  "name": "play-ball-3d-online",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@fontsource/chakra-petch": "^5.1.0",
+    "@fontsource/inter": "^5.1.0",
+    "gsap": "^3.12.5",
+    "nipplejs": "^0.10.2",
+    "peerjs": "^1.5.4",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/bun": "latest",
+    "@types/three": "^0.170.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0",
+    "vite-plugin-pwa": "^0.21.1"
+  }
+}
